@@ -1,31 +1,24 @@
-import React from 'react';
-import { BsSearch } from 'react-icons/bs';
-import { Input, LabelDescr } from './Filter.styled';
-import { LabelWrapper } from 'components/ContactForm/ContactForm.styled';
-import { selectFilter } from 'redux/selectors';
+import { nanoid } from 'nanoid';
+import { FilterLabel, FilterInput } from './Filter.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilter } from 'redux/filterSlice';
+import { selectFilter } from 'redux/selectors';
+import { updateFilter } from 'redux/filterSlice';
 
+const inputId = nanoid();
 const Filter = () => {
-  const filter = useSelector(selectFilter);
+  const value = useSelector(selectFilter);
   const dispatch = useDispatch();
 
-  function changeFilter(e) {
-    dispatch(setFilter(e.target.value.toLowerCase()));
-  }
-
   return (
-    <LabelDescr>
-      <LabelWrapper>
-        <BsSearch size="16" /> Find contacts by name
-      </LabelWrapper>
-      <Input
+    <>
+      <FilterLabel htmlFor={inputId}>Find contacts by name</FilterLabel>
+      <FilterInput
         type="text"
-        value={filter}
-        onChange={changeFilter}
-        placeholder="search contacts"
+        value={value}
+        id={inputId}
+        onChange={e => dispatch(updateFilter(e.target.value))}
       />
-    </LabelDescr>
+    </>
   );
 };
 

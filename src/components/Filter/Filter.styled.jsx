@@ -1,38 +1,16 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
-export const LabelDescr = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+export const FilterLabel = styled.label`
+  display: block;
+  margin-bottom: 10px;
+`;
+export const FilterInput = styled.input`
+  display: block;
+  height: 25px;
+  margin-bottom: 20px;
 
-  color: ${props => props.theme.colors.accent};
-  text-shadow: ${props => props.theme.shadows.textShadow};
+  border: 1px solid rgba(33, 33, 33, 0.2);
+  border-radius: 5px;
 `;
 
-export const LabelWrapper = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-left: 8px;
-`;
 
-export const Input = styled.input`
-  padding-top: ${p => p.theme.space[3]}px;
-  padding-bottom: ${p => p.theme.space[3]}px;
-  padding-left: ${p => p.theme.space[4]}px;
-  padding-right: ${p => p.theme.space[4]}px;
-
-  max-width: 100%;
-  width: 300px;
-
-  border: 0;
-  outline: 0;
-  border-radius: 8px;
-  color: ${props => props.theme.colors.accent};
-  background-color: ${props => props.theme.colors.primary};
-  box-shadow: inset 1px 1px 3px #8ba793, inset -1px -1px 5px #fff;
-
-  font-style: italic;
-
-  text-shadow: ${props => props.theme.shadows.textShadow};
-  font-size: ${props => props.theme.fontSizes.s};
-`;

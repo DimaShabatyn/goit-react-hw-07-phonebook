@@ -1,90 +1,81 @@
-import styled from 'styled-components';
-import { Form as FormikForm, Field, ErrorMessage as FormikError } from 'formik';
+import styled from '@emotion/styled';
+import { BsFillPersonFill } from 'react-icons/bs';
+import { GiSmartphone } from 'react-icons/gi';
+import { Form as FormikForm, ErrorMessage as FormikErrorMessage } from 'formik';
 
 export const Form = styled(FormikForm)`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: ${props => props.theme.space[4]}px;
-  padding: ${props => props.theme.space[3]}px;
-  max-width: 100%;
-  width: 500px;
+
+  margin-bottom: 20px;
+  padding: 20px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  border-radius: 5px;
 `;
 
-export const FormField = styled.label`
+export const FormField = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-width: 100%;
-  width: 500px;
-  color: ${props => props.theme.colors.accent};
-  text-shadow: ${props => props.theme.shadows.textShadow};
+  margin-bottom: 10px;
+  width: 100%;
 `;
 
-export const LabelWrapper = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-left: 8px;
+export const FormLabel = styled.label`
+  margin-bottom: 10px;
 `;
 
-export const FieldFormik = styled(Field)`
-  padding-top: ${p => p.theme.space[3]}px;
-  padding-bottom: ${p => p.theme.space[3]}px;
-  padding-left: ${p => p.theme.space[4]}px;
-  padding-right: ${p => p.theme.space[4]}px;
-  max-width: 100%;
-  border: 0;
-  outline: 0;
-  border-radius: 8px;
-  color: ${props => props.theme.colors.accent};
-  background-color: ${props => props.theme.colors.primary};
-  box-shadow: inset 1px 1px 3px #8ba793, inset -1px -1px 5px #fff;
-  font-style: italic;
-  text-shadow: ${props => props.theme.shadows.textShadow};
-  font-size: ${props => props.theme.fontSizes.s};
-`;
-
-export const ErrorMessage = styled(FormikError)`
-  max-width: 500px;
-  font-style: italic;
-  color: #9e0202;
-`;
-
-export const Button = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${p => p.theme.space[2]}px;
-  padding-top: ${p => p.theme.space[3]}px;
-  padding-bottom: ${p => p.theme.space[3]}px;
-  padding-left: ${p => p.theme.space[4]}px;
-  padding-right: ${p => p.theme.space[4]}px;
-  max-width: 100%;
-  border: ${p => p.theme.borders.none};
-  outline: none;
-  border-radius: 8px;
-  box-shadow: ${p => p.theme.shadows.boxShadow};
-  transition: all 0.2s ease-in-out;
-  background-color: ${p => p.theme.colors.muted};
-  color: ${p => p.theme.colors.white};
-  cursor: pointer;
-  :hover,
-  :focus {
-    background-color: ${p => p.theme.colors.secondary};
-    color: ${p => p.theme.colors.accent};
-    box-shadow: -2px -2px 5px #fff, 2px 2px 5px #8ba793;
+export const Wrapper = styled.div`
+  position: relative;
+  &:focus-within {
     svg {
-      fill: ${p => p.theme.colors.accent};
-      stroke: ${p => p.theme.colors.accent};
-    }
-    :active {
-      color: ${p => p.theme.colors.accent};
-      box-shadow: inset 1px 1px 2px #8ba793, inset -1px -1px 2px #fff;
-      svg {
-        fill: ${p => p.theme.colors.accent};
-        stroke: ${p => p.theme.colors.accent};
-      }
+      transition: fill 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      fill: yellowgreen;
     }
   }
 `;
+
+export const PersonIcon = styled(BsFillPersonFill)`
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+`;
+
+export const PhoneIcon = styled(GiSmartphone)`
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+`;
+
+export const Input = styled.input`
+  height: 25px;
+  width: 88%;
+  padding-left: 30px;
+  border: 1px solid rgba(33, 33, 33, 0.2);
+  outline: none;
+  border-radius: 5px;
+  &:focus {
+    border-color: yellowgreen;
+  }
+  transition: border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+`;
+
+export const ErrorMessage = styled(FormikErrorMessage)`
+  font-size: 14px;
+  color: red;
+`;
+
+export const FormButton = styled.button`
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  background-color: lightblue;
+`;
+

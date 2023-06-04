@@ -1,93 +1,121 @@
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import { notifyOptions } from 'utils/notify';
-import { toast } from 'react-toastify';
-
-
+import { Formik, Field, getIn } from 'formik';
+import toast, { Toaster } from 'react-hot-toast';
+import * as Yup from 'yup';
+import 'yup-phone-lite';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/operations';
 import {
-  Button,
-  ErrorMessage,
-  FieldFormik,
   Form,
   FormField,
+  Wrapper,
+  Input,
+  FormLabel,
+  ErrorMessage,
+  FormButton,
+  PersonIcon,
+  PhoneIcon,
 } from './ContactForm.styled';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectContacts } from 'redux/selectors';
-import { addContact } from 'redux/contactsSlice';
 
-const schema = yup.object().shape({
-  name: yup
-    .string()
-    .trim()
-    .matches(
-      /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-      'Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d`Artagnan'
-    )
-    .required(),
-  number: yup
-    .string()
-    .trim()
-    .matches(
-      /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
-      'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
-    )
-    .required(),
+const ContactSchema = Yup.object({
+  name: Yup.string()
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Name is required!'),
+  phone: Yup.string().phone('UA').required('Phone number is required!'),
 });
-
-const initialValues = { name: '', number: '' };
 export const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
 
-const contacts = useSelector(selectContacts);
-const dispatch = useDispatch();
-
-const isExist = ({ name, number }) => {
-  const normalizedName = name.toLowerCase().trim();
-  const normalizedNumber = number.trim();
-
-  const dublicate = contacts.some(
-    contact =>
-      contact.name.toLowerCase().trim() === normalizedName ||
-      contact.number.trim() === normalizedNumber
-  );
-  return dublicate;
-};
-
-const onAddContact = ({ name, number }) => {
-  if (isExist({ name, number })) {
-    return toast.error(`This contact is already in contacts`, notifyOptions);
+  function getStyles(errors, touched, fieldName) {
+    if (getIn(errors, fieldName) && getIn(touched, fieldName)) {
+      return {
+        borderColor: 'red',
+      };
+    }
+    return {};
   }
-  const action = addContact({ name, number });
-  dispatch(action);
-};
 
   return (
-    <Formik
-      initialValues = {initialValues}
-      onSubmit={(values, actions) => {
-        onAddContact({ ...values });
-        actions.resetForm();
-      }}
-      validationSchema={schema}
-    >
-      <Form autoComplete="off">
-        <FormField htmlFor="name">
-          Name
-          <FieldFormik
-            type="text"
-            name="name"
-          />
-          <ErrorMessage name="name" component="span" />
-        </FormField>
-        <FormField htmlFor="number">
-          Number
-          <FieldFormik
-            type="text"
-            name="number"
-          />
-          <ErrorMessage name="number" component="span" />
-        </FormField>
-        <Button type="submit">Add contact</Button>
-      </Form>
-    </Formik>
+    <>
+      <Toaster />
+      <Formik
+        initialValues={{
+          name: '',
+          phone: '',
+        }}
+        validationSchema={ContactSchema}
+        onSubmit={({ ...values }, actions) => {
+          const existingContact = contacts.find(
+            contact => contact.name.toLowerCase() === values.name.toLowerCase()
+          );
+          if (existingContact) {
+            toast.error(
+              `You already have a ${existingContact.name} in your contacts!`
+            );
+            actions.resetForm();
+          } else {
+            dispatch(addContact({ ...values }));
+
+            actions.resetForm();
+          }
+        }}
+      >
+        {formikProps => (
+          <Form>
+            <FormField>
+              <FormLabel htmlFor="name">Name</FormLabel>
+              <Wrapper>
+                <Field
+                  name="name"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="your name"
+                      id="name"
+                      style={getStyles(
+                        formikProps.errors,
+                        formikProps.touched,
+                        'name'
+                      )}
+                    />
+                  )}
+                />
+                <PersonIcon />
+              </Wrapper>
+              <ErrorMessage name="name" component="div" />
+            </FormField>
+            <FormField>
+              <FormLabel htmlFor="number">Number</FormLabel>
+              <Wrapper>
+                <Field
+                  name="phone"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="+38-0XX-XXX-XX-XX"
+                      id="number"
+                      style={getStyles(
+                        formikProps.errors,
+                        formikProps.touched,
+                        'phone'
+                      )}
+                    />
+                  )}
+                />
+                <PhoneIcon />
+              </Wrapper>
+              <ErrorMessage name="phone" component="div" />
+            </FormField>
+
+            <FormButton type="submit">Add contact</FormButton>
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 };
+
+export default ContactForm;
+

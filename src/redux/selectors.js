@@ -1,23 +1,17 @@
-import { notifyOptions } from 'utils/notify';
-import { toast } from 'react-toastify';
+export const selectContacts = state => state.contacts.items;
 
-export const selectContacts = store => store.contacts.items;
-export const selectFilter = store => store.filter;
+export const selectIsLoading = state => state.contacts.isLoading;
 
-export const selectFilteredContacts = store => {
-  const { filter, contacts } = store;
-  if (!filter) {
-    return contacts.items;
-  }
-  const normalizedFilter = filter.toLowerCase();
-  const filteredContacts = contacts.items.filter(
-    ({ name, number }) =>
-      name.toLowerCase().trim().includes(normalizedFilter) ||
-      number.trim().includes(normalizedFilter)
+export const selectError = state => state.contacts.error;
+
+export const selectFilter = state => state.filter.value;
+
+export const selectVisibleContacts = state => {
+  const contacts = selectContacts(state);
+  const filter = selectFilter(state);
+
+  return contacts?.filter(contact =>
+    contact?.name?.toLowerCase().includes(filter.toLowerCase())
   );
-
-  if (normalizedFilter && !filteredContacts.length) {
-    toast.warn(`No contacts matching your request`, notifyOptions);
-  }
-  return filteredContacts;
 };
+
